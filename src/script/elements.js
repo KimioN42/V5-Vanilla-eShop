@@ -8,11 +8,22 @@ App.elements = {
     },
     body: {
         container: document.createElement("section"),
-        bgImg: document.createElement("img"),
-        title: document.createElement("h1"),
-        description: document.createElement("p"),
-        items: []
+        main: {
+            container: document.createElement("section"),
+            bgImg: document.createElement("img"),
+            title: document.createElement("h1"),
+            description: document.createElement("p"),
+            items: []
+        },
+        checkout: {
+            container: document.createElement("div"),
+            title: document.createElement("h1"),
+            items: [],
+            confirmBtnContainer: document.createElement("div"),
+            confirmBtn: document.createElement("button")
+        },
     },
+
     footer: {
         container: document.createElement("section"),
         logo: document.createElement("img")

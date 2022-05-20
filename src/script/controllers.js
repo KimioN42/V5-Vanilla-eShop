@@ -13,6 +13,16 @@ App.controllers = {
 
         header.logo.src = "./assets/logo.png";
         header.logo.style.margin = "35px 0px 35px 48px";
+        header.logo.style.cursor = "pointer";
+        header.logo.onclick = () => {
+            console.log("home clicked");
+            let checkoutDisplay = els.body.checkout.container;
+            let mainDisplay = els.body.main.container;
+            if (mainDisplay.style.display === "none") {
+                checkoutDisplay.style.display = "none";
+                mainDisplay.style.display = "block";
+            }
+        }
 
         header.cartIcon.src = "./assets/cart.png";
         header.cartIcon.style.width = "36px";
@@ -21,46 +31,79 @@ App.controllers = {
         header.cartIcon.style.cursor = "pointer";
         header.cartIcon.onclick = () => {
             console.log("cart clicked");
+            let checkoutDisplay = els.body.checkout.container;
+            let mainDisplay = els.body.main.container;
+            if (checkoutDisplay.style.display === "none") {
+                checkoutDisplay.style.display = "block";
+                mainDisplay.style.display = "none";
+            }
         }
 
         header.container.appendChild(header.logo);
         header.container.appendChild(header.cartIcon);
         els.root.appendChild(header.container);
     },
-    createBody() {
+    createMain() {
         const els = App.elements;
-        const body = els.body;
+        const main = els.body.main;
 
-        body.container.style.flexGrow = "1";
+        main.bgImg.src = "./assets/bg.png";
+        main.bgImg.style.width = "100%";
 
-        body.bgImg.src = "./assets/bg.png";
-        body.bgImg.style.width = "100%";
+        main.title.innerText = "Our products";
+        main.title.style.fontStyle = "normal";
+        main.title.style.fontWeight = "700";
+        main.title.style.fontSize = "24px";
+        main.title.style.lineHeight = "29px";
+        main.title.style.textAlign = "center";
+        main.title.style.color = "#000000";
 
-        body.title.innerText = "Our products";
-        body.title.style.fontStyle = "normal";
-        body.title.style.fontWeight = "700";
-        body.title.style.fontSize = "24px";
-        body.title.style.lineHeight = "29px";
-        body.title.style.textAlign = "center";
-        body.title.style.color = "#000000";
-
-        body.description.innerText = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tincidunt ut laoreet dolore magna aliquam erat volutpat.";
-        body.description.style.fontStyle = "normal";
-        body.description.style.fontWeight = "400";
-        body.description.style.fontSize = "24px";
-        body.description.style.lineHeight = "29px";
-        body.description.style.textAlign = "center";
-        body.description.style.color = "#000000";
-        body.description.style.margin = "0 248px 0 248px";
+        main.description.innerText = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tincidunt ut laoreet dolore magna aliquam erat volutpat.";
+        main.description.style.fontStyle = "normal";
+        main.description.style.fontWeight = "400";
+        main.description.style.fontSize = "24px";
+        main.description.style.lineHeight = "29px";
+        main.description.style.textAlign = "center";
+        main.description.style.color = "#000000";
+        main.description.style.margin = "0 10rem";
 
 
+        //TODO: add items here
 
-        body.container.appendChild(body.bgImg);
-        body.container.appendChild(body.title);
-        body.container.appendChild(body.description);
+        main.container.appendChild(main.bgImg);
+        main.container.appendChild(main.title);
+        main.container.appendChild(main.description);
+        els.body.container.appendChild(main.container);
+    },
+    createCheckout() {
+        const els = App.elements;
+        const { container, title, items, confirmBtn, confirmBtnContainer } = els.body.checkout;
 
+        container.style.backgroundColor = "#E5E5E5";
+        container.style.height = "100%";
 
-        els.root.appendChild(body.container);
+        title.innerText = "My cart [Total Amount: X]";
+        title.style.padding = "230px 0 0 0";
+        title.style.width = "100%";
+        title.style.height = "40px";
+        title.style.fontStyle = "normal";
+        title.style.fontWeight = "700";
+        title.style.fontSize = "24px";
+        title.style.lineHeight = "29px";
+        title.style.textAlign = "center";
+
+        //TODO: add items here
+
+        confirmBtn.innerText = "Confirm purchase";
+        confirmBtn.classList.add("btn");
+        confirmBtnContainer.appendChild(confirmBtn);
+        confirmBtnContainer.style.textAlign = "center";
+
+        container.appendChild(title);
+        container.appendChild(confirmBtnContainer);
+        container.style.display = "none";
+        els.root.appendChild(container);
+
     },
     createFooter() {
         const els = App.elements;
@@ -69,7 +112,7 @@ App.controllers = {
         footer.container.style.backgroundColor = "#000000";
         footer.container.style.display = "flex";
         footer.container.style.justifyContent = "center";
-        footer.container.style.padding = "50px";
+        footer.container.style.padding = "0";
 
         footer.logo.src = "./assets/logo.png";
         footer.logo.style.margin = "35px 0px 35px 48px";
@@ -86,14 +129,15 @@ App.controllers = {
         // els.root.style.border = "1px solid green";
         els.root.style.display = "flex";
         els.root.style.flexDirection = "column";
-
-
+        els.body.container.style.flexGrow = "1";
 
         this.createHeader();
-        this.createBody();
+
+        this.createMain();
+        els.root.appendChild(els.body.container);
+        this.createCheckout();
+
+
         this.createFooter();
     }
-
-
-
 }
