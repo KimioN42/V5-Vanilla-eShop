@@ -16,12 +16,7 @@ App.controllers = {
         header.logo.style.cursor = "pointer";
         header.logo.onclick = () => {
             console.log("home clicked");
-            let checkoutDisplay = els.body.checkout.container;
-            let mainDisplay = els.body.main.container;
-            if (mainDisplay.style.display === "none") {
-                checkoutDisplay.style.display = "none";
-                mainDisplay.style.display = "block";
-            }
+            this.go("home")
         }
 
         header.cartIcon.src = "./assets/cart.png";
@@ -31,12 +26,7 @@ App.controllers = {
         header.cartIcon.style.cursor = "pointer";
         header.cartIcon.onclick = () => {
             console.log("cart clicked");
-            let checkoutDisplay = els.body.checkout.container;
-            let mainDisplay = els.body.main.container;
-            if (checkoutDisplay.style.display === "none") {
-                checkoutDisplay.style.display = "block";
-                mainDisplay.style.display = "none";
-            }
+            this.go("cart");
         }
 
         header.container.appendChild(header.logo);
@@ -73,7 +63,11 @@ App.controllers = {
         main.container.appendChild(main.bgImg);
         main.container.appendChild(main.title);
         main.container.appendChild(main.description);
+
+        els.body.container.innerHTML = "";
         els.body.container.appendChild(main.container);
+
+        // console.log("main page rendered");
     },
     createCheckout() {
         const els = App.elements;
@@ -81,6 +75,7 @@ App.controllers = {
 
         container.style.backgroundColor = "#E5E5E5";
         container.style.height = "100%";
+        container.style.border = "1px solid #E5E5E5";
 
         title.innerText = "My cart [Total Amount: X]";
         title.style.padding = "230px 0 0 0";
@@ -101,8 +96,11 @@ App.controllers = {
 
         container.appendChild(title);
         container.appendChild(confirmBtnContainer);
-        container.style.display = "none";
-        els.root.appendChild(container);
+
+        els.body.container.innerHTML = "";
+        els.body.container.appendChild(container);
+
+        // console.log("checkout page rendered");
 
     },
     createFooter() {
@@ -126,18 +124,43 @@ App.controllers = {
         const els = App.elements;
 
         els.root.style.height = "100vh";
-        // els.root.style.border = "1px solid green";
         els.root.style.display = "flex";
         els.root.style.flexDirection = "column";
         els.body.container.style.flexGrow = "1";
 
         this.createHeader();
 
-        this.createMain();
         els.root.appendChild(els.body.container);
-        this.createCheckout();
-
 
         this.createFooter();
+    },
+    getPage() {
+        let searchParams = new URLSearchParams(window.location.search);
+        const page = searchParams.get("p");
+        return page;
+    },
+    router() {
+        setInterval(() => {
+            const page = this.getPage();
+            // console.log("page:", page);
+            if (page == "cart") {
+                // console.log("rendering checkout");
+                this.createCheckout();
+            } else if (!page) {
+                // console.log("rendering main");
+                this.createMain();
+            } else {
+                //error page
+            }
+        }, 100);
+
+    },
+    go(p, url) {
+        if (p === "cart") {
+            history.pushState({ p }, "", App.state.routes[p]);
+        } else {
+            history.pushState({ p }, "", App.state.routes[p]);
+        }
+
     }
 }
