@@ -33,6 +33,27 @@ App.controllers = {
         header.container.appendChild(header.cartIcon);
         els.root.appendChild(header.container);
     },
+    updateBody(el) {
+        App.elements.body.container.innerHTML = "";
+        App.elements.body.container.appendChild(el);
+    },
+    createErrorPage() {
+        const err = App.elements.body.error;
+
+        err.title.innerText = "Page not found!";
+        err.title.style.padding = "230px 0 0 0";
+        err.description.innerText = "The URL you're trying to access was not found.";
+
+        err.container.appendChild(err.title);
+        err.container.appendChild(err.description);
+        err.container.style.textAlign = "center";
+        err.container.style.backgroundColor = "#E5E5E5";
+        err.container.style.height = "100%";
+        err.container.style.border = "1px solid #E5E5E5";
+
+
+        this.updateBody(err.container);
+    },
     createMain() {
         const els = App.elements;
         const main = els.body.main;
@@ -64,8 +85,7 @@ App.controllers = {
         main.container.appendChild(main.title);
         main.container.appendChild(main.description);
 
-        els.body.container.innerHTML = "";
-        els.body.container.appendChild(main.container);
+        this.updateBody(main.container);
 
         // console.log("main page rendered");
     },
@@ -120,6 +140,7 @@ App.controllers = {
         footer.container.appendChild(footer.logo);
         els.root.appendChild(footer.container);
     },
+
     createLayout() {
         const els = App.elements;
 
@@ -151,6 +172,7 @@ App.controllers = {
                 this.createMain();
             } else {
                 //error page
+                this.createErrorPage();
             }
         }, 100);
 

@@ -8,6 +8,11 @@ App.elements = {
     },
     body: {
         container: document.createElement("section"),
+        error: {
+            container: document.createElement("section"),
+            title: document.createElement("h1"),
+            description: document.createElement("p"),
+        },
         main: {
             container: document.createElement("section"),
             bgImg: document.createElement("img"),
