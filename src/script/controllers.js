@@ -140,7 +140,6 @@ App.controllers = {
         footer.container.appendChild(footer.logo);
         els.root.appendChild(footer.container);
     },
-
     createLayout() {
         const els = App.elements;
 
@@ -184,5 +183,25 @@ App.controllers = {
             history.pushState({ p }, "", App.state.routes[p]);
         }
 
+    },
+    createBtn(content) {
+        const el = document.createElement("button");
+
+        //styling element
+        el.style.display = "flex";
+        el.style.flexDirection = "column";
+        el.style.justifyContent = "center";
+        el.style.alignItems = "center";
+        el.style.padding = "5px 16px";
+        el.style.width = "84px";
+        el.style.height = "32px";
+        el.style.background = "#000000";
+        el.style.boxShadow = "0px 2px 0px rgba(0, 0, 0, 0.043)";
+        el.style.borderRadius = "20px";
+        el.style.color = "#FFFFFF";
+
+        el.innerText = content;
+
+        return el;
     }
 }
