@@ -184,7 +184,7 @@ App.controllers = {
         }
 
     },
-    createBtn(content) {
+    createBtn(content, type = "primary", onClick) {
         const el = document.createElement("button");
 
         //styling element
@@ -193,14 +193,35 @@ App.controllers = {
         el.style.justifyContent = "center";
         el.style.alignItems = "center";
         el.style.padding = "5px 16px";
-        el.style.width = "84px";
         el.style.height = "32px";
-        el.style.background = "#000000";
-        el.style.boxShadow = "0px 2px 0px rgba(0, 0, 0, 0.043)";
         el.style.borderRadius = "20px";
         el.style.color = "#FFFFFF";
+        el.style.border = "none";
+
+        //type === primary
+        if (type === "primary") {
+            el.style.boxShadow = "0px 2px 0px rgba(0, 0, 0, 0.043)";
+            el.style.background = "#000000";
+        }
+        else if (type === "secondary") {
+            el.style.background = "rgba(0, 0, 0, 0.6)";
+            el.style.boxShadow = "0px 4px 4px rgba(0, 0, 0, 0.25)";
+        }
+        else if (type === "other") {
+            el.style.color = "#000000";
+            el.style.background = "rgba(0, 0, 0, 0.2)";
+            el.style.boxShadow = "0px 4px 4px rgba(0, 0, 0, 0.25)";
+        }
+        else if (type === "default") {
+            el.style.color = "#000000";
+            el.style.background = "#FFFFFF";
+            el.style.boxShadow = "0px 2px 0px rgba(0, 0, 0, 0.043)";
+            el.style.border = "2px solid #000000";
+        }
 
         el.innerText = content;
+
+        el.onclick = onClick;
 
         return el;
     }
