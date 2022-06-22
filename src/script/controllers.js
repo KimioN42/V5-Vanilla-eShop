@@ -297,5 +297,100 @@ App.controllers = {
 
 
         return el;
+    },
+    createModal(children) {
+        //function
+        const closeModal = () => {
+            console.log("modal closed");
+            this.closeModal(el);
+        }
+
+        //element to be returned
+        const el = document.createElement("div");
+
+        el.style.display = "flex";
+        el.style.justifyContent = "center";
+        el.style.alignItems = "center";
+        el.style.position = "fixed";
+        el.style.top = "0";
+        el.style.left = "0";
+        el.style.width = "100%";
+        el.style.height = "100%";
+        el.style.background = "rgba(0, 0, 0, 0.5)";
+        el.classList.add("backdrop");
+        el.onclick = (e) => {
+            console.log(e.target.classList.contains("backdrop"));
+            if (e.target.classList.contains("backdrop")) {
+                closeModal();
+            }
+        };
+
+
+
+        //modal
+        const modal = document.createElement("div");
+
+        modal.style.display = "flex";
+        modal.style.flexDirection = "column";
+        modal.style.width = "fit-content";
+        modal.style.background = "#ffffff";
+        modal.style.borderRadius = "4px";
+
+        //close button
+        const closeBtn = document.createElement("div");
+        closeBtn.innerText = "X";
+        closeBtn.style.color = "#FFFFFF";
+        closeBtn.style.display = "flex";
+        closeBtn.style.justifyContent = "center";
+        closeBtn.style.alignSelf = "flex-end";
+        closeBtn.style.alignItems = "center";
+        closeBtn.style.padding = "10px";
+        closeBtn.style.width = "fit-content";
+        closeBtn.style.background = "rgba(0, 0, 0, 0.6)";
+        closeBtn.style.borderRadius = "4px";
+        closeBtn.style.margin = "12px";
+        closeBtn.style.cursor = "pointer";
+        closeBtn.onclick = closeModal;
+
+        //body
+        const body = document.createElement("div");
+        body.innerHTML = children;
+
+
+        //footer
+        const footer = document.createElement("div");
+        footer.style.display = "flex";
+        footer.style.justifyContent = "space-between";
+        footer.style.margin = "45px 82px 71px 81px";
+
+        //cancel button
+        const cancelBtn = this.createBtn("Cancel", "other", closeModal);
+        cancelBtn.style.cursor = "pointer";
+        footer.appendChild(cancelBtn);
+
+        //confirm button
+        const confirmBtn = this.createBtn("Confirm", "secondary", () => {
+            console.log("confirm clicked");
+        });
+        confirmBtn.style.cursor = "pointer";
+        confirmBtn.style.marginLeft = "12px";
+        footer.appendChild(confirmBtn);
+
+        //append elements
+        modal.appendChild(closeBtn);
+        modal.appendChild(body);
+        modal.appendChild(footer);
+
+        el.appendChild(modal);
+
+        return el;
+    },
+    openModal(el) {
+        //modalOpen = true;
+        el.style.display = "flex";
+    },
+    closeModal(el) {
+        //modalOpen = false;
+        el.style.display = "none";
     }
 }
