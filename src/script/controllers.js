@@ -224,5 +224,78 @@ App.controllers = {
         el.onclick = onClick;
 
         return el;
+    },
+    createCard(imgSrc, titleText, priceText, descriptionText) {
+        //card to be returned
+        const el = document.createElement("div");
+
+        el.style.border = "1px solid black";
+        el.style.display = "flex";
+        el.style.flexDirection = "column";
+        el.style.alignItems = "center";
+
+
+        //image
+        const img = document.createElement("img");
+        img.src = imgSrc;
+
+        img.style.maxHeight = "300px";
+        img.style.maxWidth = "300px";
+
+
+        //title
+        const title = document.createElement("div");
+        title.innerText = titleText;
+
+        title.style.fontFamily = "Inter";
+        title.style.fontStyle = "normal";
+        title.style.fontSize = "16px";
+        title.style.fontWeight = "700";
+        title.style.lineHeight = "19px";
+        title.style.textAlign = "center";
+        title.style.color = "#000000";
+        title.style.marginTop = "40px";
+
+        //price
+        const price = document.createElement("div");
+        price.innerText = priceText;
+
+        price.style.fontSize = "16px";
+        price.style.fontWeight = "400";
+        price.style.fontStyle = "normal";
+        price.style.fontFamily = "Inter";
+        price.style.lineHeight = "19px";
+        price.style.textAlign = "center";
+        price.style.color = "#000000";
+        price.style.marginTop = "4px";
+
+        //description
+        const description = document.createElement("div");
+        description.innerText = descriptionText;
+
+        description.style.fontFamily = "Inter";
+        description.style.fontStyle = "normal";
+        description.style.fontSize = "16px";
+        description.fontWeight = "400";
+        description.style.lineHeight = "19px";
+        description.style.textAlign = "center";
+        description.style.color = "#000000";
+        description.style.marginTop = "4px";
+
+        //button
+        const btn = this.createBtn("Add to cart", "primary", () => {
+            console.log("add to cart clicked");
+        });
+        btn.style.marginTop = "4px";
+
+        //append elements
+        el.appendChild(img);
+        el.appendChild(title);
+        el.appendChild(price);
+        el.appendChild(description);
+        el.appendChild(btn);
+
+
+        return el;
     }
 }

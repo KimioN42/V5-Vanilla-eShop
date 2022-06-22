@@ -5,19 +5,22 @@ const App = {
         // this.controllers.createLayout();
         // this.controllers.router();
 
-        const el = this.controllers.createBtn("test", "primary", () => {
-            console.log("clicked");
-        });
-        this.elements.root.appendChild(el);
+        // const el = this.controllers.createBtn("test", "primary", () => {
+        //     console.log("clicked");
+        // });
+        // this.elements.root.appendChild(el);
 
-        const el2 = this.controllers.createBtn("test", "secondary");
-        this.elements.root.appendChild(el2);
+        // const el2 = this.controllers.createBtn("test", "secondary");
+        // this.elements.root.appendChild(el2);
 
-        const el3 = this.controllers.createBtn("test", "default");
-        this.elements.root.appendChild(el3);
+        // const el3 = this.controllers.createBtn("test", "default");
+        // this.elements.root.appendChild(el3);
 
-        const el4 = this.controllers.createBtn("test", "other");
-        this.elements.root.appendChild(el4);
+        // const el4 = this.controllers.createBtn("test", "other");
+        // this.elements.root.appendChild(el4);
+
+        const card = this.controllers.createCard("./assets/product1.png", "Croissant", "USD 2", "asdasda");
+        this.elements.root.appendChild(card);
 
         console.log("end");
     },
