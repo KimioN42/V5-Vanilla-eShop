@@ -140,7 +140,6 @@ App.controllers = {
         footer.container.appendChild(footer.logo);
         els.root.appendChild(footer.container);
     },
-
     createLayout() {
         const els = App.elements;
 
@@ -184,5 +183,214 @@ App.controllers = {
             history.pushState({ p }, "", App.state.routes[p]);
         }
 
+    },
+    createBtn(content, type = "primary", onClick) {
+        const el = document.createElement("button");
+
+        //styling element
+        el.style.display = "flex";
+        el.style.flexDirection = "column";
+        el.style.justifyContent = "center";
+        el.style.alignItems = "center";
+        el.style.padding = "5px 16px";
+        el.style.height = "32px";
+        el.style.borderRadius = "20px";
+        el.style.color = "#FFFFFF";
+        el.style.border = "none";
+
+        //type === primary
+        if (type === "primary") {
+            el.style.boxShadow = "0px 2px 0px rgba(0, 0, 0, 0.043)";
+            el.style.background = "#000000";
+        }
+        else if (type === "secondary") {
+            el.style.background = "rgba(0, 0, 0, 0.6)";
+            el.style.boxShadow = "0px 4px 4px rgba(0, 0, 0, 0.25)";
+        }
+        else if (type === "other") {
+            el.style.color = "#000000";
+            el.style.background = "rgba(0, 0, 0, 0.2)";
+            el.style.boxShadow = "0px 4px 4px rgba(0, 0, 0, 0.25)";
+        }
+        else if (type === "default") {
+            el.style.color = "#000000";
+            el.style.background = "#FFFFFF";
+            el.style.boxShadow = "0px 2px 0px rgba(0, 0, 0, 0.043)";
+            el.style.border = "2px solid #000000";
+        }
+
+        el.innerText = content;
+
+        el.onclick = onClick;
+
+        return el;
+    },
+    createCard(imgSrc, titleText, priceText, descriptionText) {
+        //card to be returned
+        const el = document.createElement("div");
+
+        el.style.border = "1px solid black";
+        el.style.display = "flex";
+        el.style.flexDirection = "column";
+        el.style.alignItems = "center";
+
+
+        //image
+        const img = document.createElement("img");
+        img.src = imgSrc;
+
+        img.style.maxHeight = "300px";
+        img.style.maxWidth = "300px";
+
+
+        //title
+        const title = document.createElement("div");
+        title.innerText = titleText;
+
+        title.style.fontFamily = "Inter";
+        title.style.fontStyle = "normal";
+        title.style.fontSize = "16px";
+        title.style.fontWeight = "700";
+        title.style.lineHeight = "19px";
+        title.style.textAlign = "center";
+        title.style.color = "#000000";
+        title.style.marginTop = "40px";
+
+        //price
+        const price = document.createElement("div");
+        price.innerText = priceText;
+
+        price.style.fontSize = "16px";
+        price.style.fontWeight = "400";
+        price.style.fontStyle = "normal";
+        price.style.fontFamily = "Inter";
+        price.style.lineHeight = "19px";
+        price.style.textAlign = "center";
+        price.style.color = "#000000";
+        price.style.marginTop = "4px";
+
+        //description
+        const description = document.createElement("div");
+        description.innerText = descriptionText;
+
+        description.style.fontFamily = "Inter";
+        description.style.fontStyle = "normal";
+        description.style.fontSize = "16px";
+        description.fontWeight = "400";
+        description.style.lineHeight = "19px";
+        description.style.textAlign = "center";
+        description.style.color = "#000000";
+        description.style.marginTop = "4px";
+
+        //button
+        const btn = this.createBtn("Add to cart", "primary", () => {
+            console.log("add to cart clicked");
+        });
+        btn.style.marginTop = "4px";
+
+        //append elements
+        el.appendChild(img);
+        el.appendChild(title);
+        el.appendChild(price);
+        el.appendChild(description);
+        el.appendChild(btn);
+
+
+        return el;
+    },
+    createModal(children) {
+        //function
+        const closeModal = () => {
+            console.log("modal closed");
+            this.closeModal(el);
+        }
+
+        //element to be returned
+        const el = document.createElement("div");
+
+        el.style.display = "flex";
+        el.style.justifyContent = "center";
+        el.style.alignItems = "center";
+        el.style.position = "fixed";
+        el.style.top = "0";
+        el.style.left = "0";
+        el.style.width = "100%";
+        el.style.height = "100%";
+        el.style.background = "rgba(0, 0, 0, 0.5)";
+        el.classList.add("backdrop");
+        el.onclick = (e) => {
+            console.log(e.target.classList.contains("backdrop"));
+            if (e.target.classList.contains("backdrop")) {
+                closeModal();
+            }
+        };
+
+
+
+        //modal
+        const modal = document.createElement("div");
+
+        modal.style.display = "flex";
+        modal.style.flexDirection = "column";
+        modal.style.width = "fit-content";
+        modal.style.background = "#ffffff";
+        modal.style.borderRadius = "4px";
+
+        //close button
+        const closeBtn = document.createElement("div");
+        closeBtn.innerText = "X";
+        closeBtn.style.color = "#FFFFFF";
+        closeBtn.style.display = "flex";
+        closeBtn.style.justifyContent = "center";
+        closeBtn.style.alignSelf = "flex-end";
+        closeBtn.style.alignItems = "center";
+        closeBtn.style.padding = "10px";
+        closeBtn.style.width = "fit-content";
+        closeBtn.style.background = "rgba(0, 0, 0, 0.6)";
+        closeBtn.style.borderRadius = "4px";
+        closeBtn.style.margin = "12px";
+        closeBtn.style.cursor = "pointer";
+        closeBtn.onclick = closeModal;
+
+        //body
+        const body = document.createElement("div");
+        body.innerHTML = children;
+
+
+        //footer
+        const footer = document.createElement("div");
+        footer.style.display = "flex";
+        footer.style.justifyContent = "space-between";
+        footer.style.margin = "45px 82px 71px 81px";
+
+        //cancel button
+        const cancelBtn = this.createBtn("Cancel", "other", closeModal);
+        cancelBtn.style.cursor = "pointer";
+        footer.appendChild(cancelBtn);
+
+        //confirm button
+        const confirmBtn = this.createBtn("Confirm", "secondary", () => {
+            console.log("confirm clicked");
+        });
+        confirmBtn.style.cursor = "pointer";
+        confirmBtn.style.marginLeft = "12px";
+        footer.appendChild(confirmBtn);
+
+        //append elements
+        modal.appendChild(closeBtn);
+        modal.appendChild(body);
+        modal.appendChild(footer);
+
+        el.appendChild(modal);
+
+        return el;
+    },
+    openModal(el) {
+        //modalOpen = true;
+        el.style.display = "flex";
+    },
+    closeModal(el) {
+        //modalOpen = false;
+        el.style.display = "none";
     }
 }
