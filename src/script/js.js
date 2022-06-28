@@ -22,17 +22,26 @@ const App = {
         // this.elements.root.appendChild(el4);
 
         //testing cards
-        // const card = this.controllers.createCard("./assets/product1.png", "Croissant", "USD 2", "asdasda");
-        // this.elements.root.appendChild(card);
+        const card1 = this.controllers.createCard("./assets/product1.png", "Croissant", "2", "asdasda", () => { console.log("added to cart"); });
+        this.elements.root.appendChild(card1);
+
+
+        const card2 = this.controllers.createCard("./assets/product2.png", "French Bread", "2.99", "asdasda", () => { console.log("added to cart"); });
+        this.elements.root.appendChild(card2);
+
+
+        const card3 = this.controllers.createCard("./assets/product3.png", "Italian Bread", "1.50", "asdasda", () => { console.log("added to cart"); });
+        this.elements.root.appendChild(card3);
+
 
         //testing modal
-        const modal = this.controllers.createModal("hello");
-        this.elements.root.appendChild(modal);
+        // const modal = this.controllers.createModal("hello");
+        // this.elements.root.appendChild(modal);
 
-        const showBtn = this.controllers.createBtn("show", "primary", () => {
-            this.controllers.openModal(modal);
-        });
-        this.elements.root.appendChild(showBtn);
+        // const showBtn = this.controllers.createBtn("show", "primary", () => {
+        //     this.controllers.openModal(modal);
+        // });
+        // this.elements.root.appendChild(showBtn);
 
         console.log("end");
     },

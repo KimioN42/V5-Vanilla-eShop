@@ -225,14 +225,16 @@ App.controllers = {
 
         return el;
     },
-    createCard(imgSrc, titleText, priceText, descriptionText) {
+    createCard(imgSrc, titleText, priceText, descriptionText, onClick) {
         //card to be returned
         const el = document.createElement("div");
 
-        el.style.border = "1px solid black";
+        // el.style.border = "1px solid black";
         el.style.display = "flex";
         el.style.flexDirection = "column";
         el.style.alignItems = "center";
+        el.style.width = "fit-content";
+        el.style.padding = "1rem";
 
 
         //image
@@ -258,7 +260,7 @@ App.controllers = {
 
         //price
         const price = document.createElement("div");
-        price.innerText = priceText;
+        price.innerText = this.formatCurrency(priceText);
 
         price.style.fontSize = "16px";
         price.style.fontWeight = "400";
@@ -283,9 +285,7 @@ App.controllers = {
         description.style.marginTop = "4px";
 
         //button
-        const btn = this.createBtn("Add to cart", "primary", () => {
-            console.log("add to cart clicked");
-        });
+        const btn = this.createBtn("Add to cart", "primary", onClick);
         btn.style.marginTop = "4px";
 
         //append elements
@@ -392,5 +392,15 @@ App.controllers = {
     closeModal(el) {
         //modalOpen = false;
         el.style.display = "none";
+    },
+    formatCurrency(value) {
+        if (typeof value === "string") {
+            value = parseFloat(value);
+        }
+
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD', minimumFractionDigits: 2
+        }).format(value);
     }
 }
