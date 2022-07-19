@@ -21,17 +21,16 @@ const App = {
         // const el4 = this.controllers.createBtn("test", "other");
         // this.elements.root.appendChild(el4);
 
+        const images = [
+            "./assets/product1.png",
+            "./assets/product2.png",
+            "./assets/product3.png"
+        ];
+
+
         //testing cards
-        const card1 = this.controllers.createCard("./assets/product1.png", "Croissant", "2", "asdasda", () => { console.log("added to cart"); });
+        const card1 = this.controllers.createCard(images, "Croissant", "2", "random desc", () => { console.log("added to cart"); });
         this.elements.root.appendChild(card1);
-
-
-        const card2 = this.controllers.createCard("./assets/product2.png", "French Bread", "2.99", "asdasda", () => { console.log("added to cart"); });
-        this.elements.root.appendChild(card2);
-
-
-        const card3 = this.controllers.createCard("./assets/product3.png", "Italian Bread", "1.50", "asdasda", () => { console.log("added to cart"); });
-        this.elements.root.appendChild(card3);
 
 
         //testing modal
@@ -47,5 +46,3 @@ const App = {
     },
 
 }
-
-console.log("Hello world!");

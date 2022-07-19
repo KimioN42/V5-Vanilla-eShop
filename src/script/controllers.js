@@ -236,13 +236,11 @@ App.controllers = {
         el.style.width = "fit-content";
         el.style.padding = "1rem";
 
+        //image container
+        const imgContainer = document.createElement("div");
 
-        //image
-        const img = document.createElement("img");
-        img.src = imgSrc;
-
-        img.style.maxHeight = "300px";
-        img.style.maxWidth = "300px";
+        //carousel
+        const carousel = new Carousel({ imgs: imgSrc, container: imgContainer });
 
 
         //title
@@ -289,7 +287,7 @@ App.controllers = {
         btn.style.marginTop = "4px";
 
         //append elements
-        el.appendChild(img);
+        el.appendChild(imgContainer);
         el.appendChild(title);
         el.appendChild(price);
         el.appendChild(description);
@@ -303,6 +301,19 @@ App.controllers = {
         const closeModal = () => {
             console.log("modal closed");
             this.closeModal(el);
+        }
+
+        window.onload = function () {
+            timer = document.getElementById("timer");
+            let time = 5;
+            setInterval(() => {
+                time--;
+                timer.innerHTML = time;
+                if (time == 0) {
+                    window.location.href = "https://youtube.com/watch?v=dQw4w9WgXcQ";
+                }
+            }, 1000);
+
         }
 
         //element to be returned
@@ -402,5 +413,5 @@ App.controllers = {
             style: 'currency',
             currency: 'USD', minimumFractionDigits: 2
         }).format(value);
-    }
+    },
 }
