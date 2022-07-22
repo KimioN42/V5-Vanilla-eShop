@@ -80,6 +80,8 @@ App.controllers = {
 
 
         //TODO: add items here
+        console.log("add items");
+
 
         main.container.appendChild(main.bgImg);
         main.container.appendChild(main.title);
@@ -161,6 +163,9 @@ App.controllers = {
     },
     router() {
         setInterval(() => {
+            if (App.state.routeRendered) {
+                return;
+            }
             const page = this.getPage();
             // console.log("page:", page);
             if (page == "cart") {
@@ -173,10 +178,12 @@ App.controllers = {
                 //error page
                 this.createErrorPage();
             }
+            App.state.routeRendered = true;
         }, 100);
 
     },
     go(p, url) {
+        App.state.routeRendered = false;
         if (p === "cart") {
             history.pushState({ p }, "", App.state.routes[p]);
         } else {
