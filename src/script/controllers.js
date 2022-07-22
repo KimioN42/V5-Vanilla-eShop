@@ -80,16 +80,39 @@ App.controllers = {
 
 
         //TODO: add items here
-        console.log("add items");
-
+        console.log("adding items");
+        this.createItemsElements(main);
 
         main.container.appendChild(main.bgImg);
         main.container.appendChild(main.title);
         main.container.appendChild(main.description);
+        main.container.appendChild(main.itemsContainer);
 
         this.updateBody(main.container);
 
         // console.log("main page rendered");
+    },
+    createItemsElements(main) {
+
+        App.state.products.forEach(product => {
+            const card = this.createCard(
+                product.images,
+                product.name,
+                product.price,
+                product.desc,
+                () => {
+                    console.log("card clicked");
+                    console.log("product added to cart: ", product);
+                }
+            );
+            card.style.margin = "1rem";
+            main.itemsContainer.appendChild(card);
+        });
+
+        main.itemsContainer.style.display = "flex";
+        main.itemsContainer.style.flexWrap = "wrap";
+        main.itemsContainer.style.justifyContent = "center";
+        main.itemsContainer.style.marginTop = "2rem";
     },
     createCheckout() {
         const els = App.elements;
@@ -133,6 +156,7 @@ App.controllers = {
         footer.container.style.display = "flex";
         footer.container.style.justifyContent = "center";
         footer.container.style.padding = "0";
+        footer.container.style.marginTop = "125px";
 
         footer.logo.src = "./assets/logo.png";
         footer.logo.style.margin = "35px 0px 35px 48px";
@@ -242,6 +266,8 @@ App.controllers = {
         el.style.alignItems = "center";
         el.style.width = "fit-content";
         el.style.padding = "1rem";
+        el.style.border = "1px solid #E5E5E5";
+        el.style.borderRadius = "10px";
 
         //image container
         const imgContainer = document.createElement("div");
@@ -291,7 +317,7 @@ App.controllers = {
 
         //button
         const btn = this.createBtn("Add to cart", "primary", onClick);
-        btn.style.marginTop = "4px";
+        btn.style.marginTop = "25px";
 
         //append elements
         el.appendChild(imgContainer);
