@@ -47,8 +47,8 @@ class Carousel {
             const el = document.createElement("img");
 
             el.src = this.config.imgs[i];
-            el.style.maxWidth = "300px";
-            el.style.maxHeight = "300px";
+            el.style.width = "300px";
+            el.style.height = "300px";
             el.style.borderRadius = "50%";
             el.style.border = "1px solid black";
             el.style.margin = "1px";
