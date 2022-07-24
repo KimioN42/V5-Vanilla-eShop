@@ -38,9 +38,26 @@ App.state = {
             ]
         }
     ],
+    //products array
+    cart: [],
     routes: {
         home: window.location.origin + window.location.pathname,
         cart: "?p=cart",
     },
     routeRendered: false,
+    mutations: {
+        addToCart(product) {
+            if (App.state.cart.find(p => p.id === product.id)) {
+                return false;
+            }
+
+            App.state.cart.push(product);
+
+            return true;
+        },
+        getCartCount() {
+            return App.state.cart.length;
+        }
+    },
+
 }

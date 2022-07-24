@@ -36,7 +36,8 @@ class Carousel {
     setContainerStyle() {
         this.container.style.display = "flex";
         this.container.style.alignItems = "center";
-        this.container.style.border = "1px solid #cccccc";
+        this.container.style.border = "1px solid #e5e5e5";
+        this.container.style.borderRadius = "10px";
         this.container.style.width = "fit-content";
         // this.container.style.height = "300px";
     }
