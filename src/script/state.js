@@ -3,7 +3,7 @@ App.state = {
         {
             id: 1,
             name: "Croissant",
-            price: "2",
+            price: 2,
             desc: "Amazing butter croissant",
             images: ["./assets/product1.png",
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/2018_01_Croissant_IMG_0685.JPG/1024px-2018_01_Croissant_IMG_0685.JPG",
@@ -12,7 +12,7 @@ App.state = {
         {
             id: 2,
             name: "French Toast",
-            price: "1.50",
+            price: 1.50,
             desc: "Best french toast",
             images: ["./assets/product2.png",
                 "https://www.foodnetwork.com/content/dam/images/food/video/2022/1/31/0/ie0309-french-toast.jpg",
@@ -21,7 +21,7 @@ App.state = {
         {
             id: 3,
             name: "Bagel",
-            price: "4",
+            price: 4,
             desc: "Super bagel",
             images: ["./assets/product3.png",
                 "https://www.myjewishlearning.com/wp-content/uploads/2019/02/New-York-Bagel-recipe.jpg",
@@ -30,7 +30,7 @@ App.state = {
         {
             id: 4,
             name: "Sprinkled Donut",
-            price: "1.50",
+            price: 1.50,
             desc: "Best donut in town",
             images: ["https://deliciouslysprinkled.com/wp-content/uploads/2015/04/Baked-Vanilla-Donuts-blog.jpg",
                 "https://thefirstyearblog.com/wp-content/uploads/2018/05/baked-donuts-square.png",
@@ -39,7 +39,16 @@ App.state = {
         }
     ],
     //products array
-    cart: [],
+    cart: [
+        {
+            id: 1,
+            name: "Croissant",
+            price: 2,
+            desc: "Amazing butter croissant",
+            images: ["./assets/product1.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/2018_01_Croissant_IMG_0685.JPG/1024px-2018_01_Croissant_IMG_0685.JPG",
+                "https://www.theflavorbender.com/wp-content/uploads/2020/05/French-Croissants-SM-2363.jpg",]
+        },],
     routes: {
         home: window.location.origin + window.location.pathname,
         cart: "?p=cart",
@@ -53,8 +62,24 @@ App.state = {
             App.state.cart.push(product);
             return "Product added to cart";
         },
+        removeFromCart(product) {
+            App.state.cart = App.state.cart.filter(p => p.id !== product.id);
+            return "Product removed from cart";
+        },
+        clearCart() {
+            App.state.cart = [];
+            return "Cart cleared";
+        },
         getCartCount() {
             return App.state.cart.length;
+        },
+        getCartTotal() {
+            let sum = 0;
+            App.state.cart.forEach(p => {
+                sum += p.price;
+            });
+            console.log("total is " + sum);
+            return sum;
         }
     },
 
