@@ -48,12 +48,10 @@ App.state = {
     mutations: {
         addToCart(product) {
             if (App.state.cart.find(p => p.id === product.id)) {
-                return false;
+                return "Product already in cart";
             }
-
             App.state.cart.push(product);
-
-            return true;
+            return "Product added to cart";
         },
         getCartCount() {
             return App.state.cart.length;

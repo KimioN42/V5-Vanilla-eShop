@@ -16,7 +16,7 @@ class Carousel {
     * @param {Array} config.imgs List of images to be displayed
     */
     constructor(config) {
-        console.log("starting carousel", this);
+        // console.log("starting carousel", this);
         this.config = config;
         this.container = config.container;
 
@@ -25,7 +25,7 @@ class Carousel {
         this.preloadImages();
         this.renderImg();
 
-        console.log("finishing carousel");
+        // console.log("finishing carousel");
     }
 
     renderImg() {

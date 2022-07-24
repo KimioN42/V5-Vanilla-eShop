@@ -94,7 +94,7 @@ App.controllers = {
 
 
         //TODO: add items here
-        console.log("adding items");
+        // console.log("adding items");
         this.createItemsElements(main);
 
         main.container.appendChild(main.bgImg);
@@ -115,9 +115,11 @@ App.controllers = {
                 product.price,
                 product.desc,
                 () => {
-                    console.log("card clicked");
+                    // console.log("card clicked");
                     const userConfirmation = confirm("Do you want to add this product to your cart?");
-                    if (userConfirmation && App.state.mutations.addToCart(product)) {
+                    if (userConfirmation) {
+                        const cartStatus = App.state.mutations.addToCart(product);
+                        window.alert(cartStatus);
                         this.updateCart();
                     }
                 }
