@@ -145,6 +145,8 @@ App.controllers = {
         els.body.container.innerHTML = "";
         els.body.container.appendChild(container);
 
+        els.body.main.itemsContainer.innerHTML = "";
+
         // console.log("checkout page rendered");
 
     },
