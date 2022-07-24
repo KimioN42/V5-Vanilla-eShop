@@ -21,22 +21,28 @@ const App = {
         // const el4 = this.controllers.createBtn("test", "other");
         // this.elements.root.appendChild(el4);
 
+        const images = [
+            "./assets/product1.png",
+            "./assets/product2.png",
+            "./assets/product3.png"
+        ];
+
+
         //testing cards
-        // const card = this.controllers.createCard("./assets/product1.png", "Croissant", "USD 2", "asdasda");
-        // this.elements.root.appendChild(card);
+        const card1 = this.controllers.createCard(images, "Croissant", "2", "random desc", () => { console.log("added to cart"); });
+        this.elements.root.appendChild(card1);
+
 
         //testing modal
-        const modal = this.controllers.createModal("hello");
-        this.elements.root.appendChild(modal);
+        // const modal = this.controllers.createModal("hello");
+        // this.elements.root.appendChild(modal);
 
-        const showBtn = this.controllers.createBtn("show", "primary", () => {
-            this.controllers.openModal(modal);
-        });
-        this.elements.root.appendChild(showBtn);
+        // const showBtn = this.controllers.createBtn("show", "primary", () => {
+        //     this.controllers.openModal(modal);
+        // });
+        // this.elements.root.appendChild(showBtn);
 
         console.log("end");
     },
 
 }
-
-console.log("Hello world!");

@@ -225,22 +225,22 @@ App.controllers = {
 
         return el;
     },
-    createCard(imgSrc, titleText, priceText, descriptionText) {
+    createCard(imgSrc, titleText, priceText, descriptionText, onClick) {
         //card to be returned
         const el = document.createElement("div");
 
-        el.style.border = "1px solid black";
+        // el.style.border = "1px solid black";
         el.style.display = "flex";
         el.style.flexDirection = "column";
         el.style.alignItems = "center";
+        el.style.width = "fit-content";
+        el.style.padding = "1rem";
 
+        //image container
+        const imgContainer = document.createElement("div");
 
-        //image
-        const img = document.createElement("img");
-        img.src = imgSrc;
-
-        img.style.maxHeight = "300px";
-        img.style.maxWidth = "300px";
+        //carousel
+        const carousel = new Carousel({ imgs: imgSrc, container: imgContainer });
 
 
         //title
@@ -258,7 +258,7 @@ App.controllers = {
 
         //price
         const price = document.createElement("div");
-        price.innerText = priceText;
+        price.innerText = this.formatCurrency(priceText);
 
         price.style.fontSize = "16px";
         price.style.fontWeight = "400";
@@ -283,13 +283,11 @@ App.controllers = {
         description.style.marginTop = "4px";
 
         //button
-        const btn = this.createBtn("Add to cart", "primary", () => {
-            console.log("add to cart clicked");
-        });
+        const btn = this.createBtn("Add to cart", "primary", onClick);
         btn.style.marginTop = "4px";
 
         //append elements
-        el.appendChild(img);
+        el.appendChild(imgContainer);
         el.appendChild(title);
         el.appendChild(price);
         el.appendChild(description);
@@ -303,6 +301,19 @@ App.controllers = {
         const closeModal = () => {
             console.log("modal closed");
             this.closeModal(el);
+        }
+
+        window.onload = function () {
+            timer = document.getElementById("timer");
+            let time = 5;
+            setInterval(() => {
+                time--;
+                timer.innerHTML = time;
+                if (time == 0) {
+                    window.location.href = "https://youtube.com/watch?v=dQw4w9WgXcQ";
+                }
+            }, 1000);
+
         }
 
         //element to be returned
@@ -392,5 +403,15 @@ App.controllers = {
     closeModal(el) {
         //modalOpen = false;
         el.style.display = "none";
-    }
+    },
+    formatCurrency(value) {
+        if (typeof value === "string") {
+            value = parseFloat(value);
+        }
+
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD', minimumFractionDigits: 2
+        }).format(value);
+    },
 }
