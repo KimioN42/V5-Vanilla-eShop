@@ -22,15 +22,29 @@ App.controllers = {
         header.cartIcon.src = "./assets/cart.png";
         header.cartIcon.style.width = "36px";
         header.cartIcon.style.height = "36px";
-        header.cartIcon.style.margin = "0 53px 0 0";
         header.cartIcon.style.cursor = "pointer";
         header.cartIcon.onclick = () => {
             console.log("cart clicked");
             this.go("cart");
         }
 
+        header.cartCount.innerText = App.state.mutations.getCartCount();
+        // header.cartCount.style.border = "1px solid #e5e5e5";
+        header.cartCount.style.color = "white";
+
+        // header.cartContainer.style.border = "1px solid #e5e5e5";
+        header.cartContainer.style.display = "flex";
+        header.cartContainer.style.alignItems = "center";
+        header.cartContainer.style.margin = "0 53px 0 0";
+
+
+        header.cartContainer.appendChild(header.cartIcon);
+        header.cartContainer.appendChild(header.cartCount);
+
+
+
         header.container.appendChild(header.logo);
-        header.container.appendChild(header.cartIcon);
+        header.container.appendChild(header.cartContainer);
         els.root.appendChild(header.container);
     },
     updateBody(el) {
@@ -80,7 +94,7 @@ App.controllers = {
 
 
         //TODO: add items here
-        console.log("adding items");
+        // console.log("adding items");
         this.createItemsElements(main);
 
         main.container.appendChild(main.bgImg);
@@ -101,8 +115,13 @@ App.controllers = {
                 product.price,
                 product.desc,
                 () => {
-                    console.log("card clicked");
-                    console.log("product added to cart: ", product);
+                    // console.log("card clicked");
+                    const userConfirmation = confirm("Do you want to add this product to your cart?");
+                    if (userConfirmation) {
+                        const cartStatus = App.state.mutations.addToCart(product);
+                        window.alert(cartStatus);
+                        this.updateCart();
+                    }
                 }
             );
             card.style.margin = "1rem";
@@ -113,6 +132,15 @@ App.controllers = {
         main.itemsContainer.style.flexWrap = "wrap";
         main.itemsContainer.style.justifyContent = "center";
         main.itemsContainer.style.marginTop = "2rem";
+    },
+    updateCart() {
+        const els = App.elements;
+        const header = els.header;
+
+        // header.cartCount.style.border = "1px solid red";
+
+        header.cartCount.innerText = App.state.mutations.getCartCount();
+
     },
     createCheckout() {
         const els = App.elements;
@@ -144,6 +172,8 @@ App.controllers = {
 
         els.body.container.innerHTML = "";
         els.body.container.appendChild(container);
+
+        els.body.main.itemsContainer.innerHTML = "";
 
         // console.log("checkout page rendered");
 
@@ -266,7 +296,7 @@ App.controllers = {
         el.style.alignItems = "center";
         el.style.width = "fit-content";
         el.style.padding = "1rem";
-        el.style.border = "1px solid #E5E5E5";
+        el.style.border = "1px solid #ccc";
         el.style.borderRadius = "10px";
 
         //image container

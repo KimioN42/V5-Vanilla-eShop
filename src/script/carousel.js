@@ -16,7 +16,7 @@ class Carousel {
     * @param {Array} config.imgs List of images to be displayed
     */
     constructor(config) {
-        console.log("starting carousel", this);
+        // console.log("starting carousel", this);
         this.config = config;
         this.container = config.container;
 
@@ -25,7 +25,7 @@ class Carousel {
         this.preloadImages();
         this.renderImg();
 
-        console.log("finishing carousel");
+        // console.log("finishing carousel");
     }
 
     renderImg() {
@@ -36,7 +36,8 @@ class Carousel {
     setContainerStyle() {
         this.container.style.display = "flex";
         this.container.style.alignItems = "center";
-        this.container.style.border = "1px solid #cccccc";
+        this.container.style.border = "1px solid #e5e5e5";
+        this.container.style.borderRadius = "10px";
         this.container.style.width = "fit-content";
         // this.container.style.height = "300px";
     }
