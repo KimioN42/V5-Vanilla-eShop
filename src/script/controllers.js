@@ -95,7 +95,14 @@ App.controllers = {
 
         //TODO: add items here
         // console.log("adding items");
-        this.createItemsElements(main);
+        main.itemsContainer.style.display = "flex";
+        main.itemsContainer.style.flexWrap = "wrap";
+        main.itemsContainer.style.justifyContent = "center";
+        main.itemsContainer.style.marginTop = "2rem";
+
+        this.createItemsElements(main.itemsContainer);
+
+        main.container.style.marginBottom = "10rem";
 
         main.container.appendChild(main.bgImg);
         main.container.appendChild(main.title);
@@ -106,34 +113,56 @@ App.controllers = {
 
         // console.log("main page rendered");
     },
-    createItemsElements(main) {
-
+    createItemsElements(container) {
+        container.innerHTML = "";
         App.state.products.forEach(product => {
             const card = this.createCard(
                 product.images,
                 product.name,
                 product.price,
                 product.desc,
+                "Add to cart",
                 () => {
                     // console.log("card clicked");
                     const userConfirmation = confirm("Do you want to add this product to your cart?");
                     if (userConfirmation) {
                         const cartStatus = App.state.mutations.addToCart(product);
                         window.alert(cartStatus);
-                        this.updateCart();
+                        this.updateCartCount();
                     }
                 }
             );
             card.style.margin = "1rem";
-            main.itemsContainer.appendChild(card);
+            container.appendChild(card);
         });
 
-        main.itemsContainer.style.display = "flex";
-        main.itemsContainer.style.flexWrap = "wrap";
-        main.itemsContainer.style.justifyContent = "center";
-        main.itemsContainer.style.marginTop = "2rem";
+
     },
-    updateCart() {
+    createCartElements(container) {
+        container.innerHTML = "";
+        App.state.cart.forEach(product => {
+            const card = this.createCard(
+                product.images,
+                product.name,
+                product.price,
+                product.desc,
+                "Remove from cart",
+                () => {
+                    // console.log("card clicked");
+                    const userConfirmation = confirm("Do you want to remove this product to your cart?");
+                    if (userConfirmation) {
+                        const cartStatus = App.state.mutations.removeFromCart(product);
+                        window.alert(cartStatus);
+                        this.updateCartCount();
+                        this.createCheckout();
+                    }
+                }
+            );
+            card.style.margin = "1rem";
+            container.appendChild(card);
+        });
+    },
+    updateCartCount() {
         const els = App.elements;
         const header = els.header;
 
@@ -144,13 +173,17 @@ App.controllers = {
     },
     createCheckout() {
         const els = App.elements;
-        const { container, title, items, confirmBtn, confirmBtnContainer } = els.body.checkout;
+        const { container, title, items, confirmBtn, confirmBtnContainer, itemsContainer } =
+            els.body.checkout;
+
+
 
         container.style.backgroundColor = "#E5E5E5";
         container.style.height = "100%";
         container.style.border = "1px solid #E5E5E5";
 
-        title.innerText = "My cart [Total Amount: X]";
+        // title.innerText = "My cart [Total Amount: " + this.formatCurrency(App.state.mutations.getCartTotal()) + "]";
+        title.innerText = `My cart [Total Amount:  ${this.formatCurrency(App.state.mutations.getCartTotal())} ]`;
         title.style.padding = "230px 0 0 0";
         title.style.width = "100%";
         title.style.height = "40px";
@@ -160,23 +193,51 @@ App.controllers = {
         title.style.lineHeight = "29px";
         title.style.textAlign = "center";
 
+
         //TODO: add items here
+        itemsContainer.style.display = "flex";
+        itemsContainer.style.flexWrap = "wrap";
+        itemsContainer.style.justifyContent = "center";
+        itemsContainer.style.marginBottom = "5rem";
+        this.createCartElements(itemsContainer);
+
+
+
 
         confirmBtn.innerText = "Confirm purchase";
         confirmBtn.classList.add("btn");
-        confirmBtnContainer.appendChild(confirmBtn);
+        confirmBtn.onclick = () => {
+            this.confirmPurchase();
+        };
         confirmBtnContainer.style.textAlign = "center";
+        confirmBtnContainer.appendChild(confirmBtn);
+
+        container.style.marginBottom = "10rem";
 
         container.appendChild(title);
+        container.appendChild(itemsContainer);
         container.appendChild(confirmBtnContainer);
 
         els.body.container.innerHTML = "";
         els.body.container.appendChild(container);
-
-        els.body.main.itemsContainer.innerHTML = "";
-
         // console.log("checkout page rendered");
 
+    },
+    confirmPurchase() {
+        // console.log("confirm purchase");
+        if (App.state.mutations.getCartCount() > 0) {
+            const userRes = confirm("Do you want to confirm your purchase?");
+            if (userRes) {
+                window.alert("Your purchase has been confirmed");
+                App.state.mutations.clearCart();
+                this.updateCartCount();
+                this.createMain();
+            } else {
+                window.alert("Your purchase has been cancelled");
+            }
+        } else {
+            window.alert("Your cart is empty");
+        }
     },
     createFooter() {
         const els = App.elements;
@@ -186,7 +247,7 @@ App.controllers = {
         footer.container.style.display = "flex";
         footer.container.style.justifyContent = "center";
         footer.container.style.padding = "0";
-        footer.container.style.marginTop = "125px";
+        // footer.container.style.marginTop = "125px";
 
         footer.logo.src = "./assets/logo.png";
         footer.logo.style.margin = "35px 0px 35px 48px";
@@ -286,7 +347,7 @@ App.controllers = {
 
         return el;
     },
-    createCard(imgSrc, titleText, priceText, descriptionText, onClick) {
+    createCard(imgSrc, titleText, priceText, descriptionText, btnLabel, onClick) {
         //card to be returned
         const el = document.createElement("div");
 
@@ -346,7 +407,7 @@ App.controllers = {
         description.style.marginTop = "4px";
 
         //button
-        const btn = this.createBtn("Add to cart", "primary", onClick);
+        const btn = this.createBtn(btnLabel, "primary", onClick);
         btn.style.marginTop = "25px";
 
         //append elements
