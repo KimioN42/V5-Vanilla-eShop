@@ -1,8 +1,22 @@
 App.state = {
-    keys: [{
-        cart: "Ingate-V5-cart",
-    }],
-    users: [],
+    keys: [
+        cart = "Ingate-V5-cart",
+        profile = "Ingate-V5-profile",
+        loggedIn = "Ingate-V5-loggedIn",
+    ],
+    users: [
+        // sample data:
+        {
+            name: "Kimio",
+            password: "123",
+            balance: 0
+        },
+    ],
+    loggedInUser: {
+        name: "Kimio",
+        password: "123",
+        balance: 0,
+    },
     products: [
         {
             id: 1,
@@ -47,8 +61,11 @@ App.state = {
     routes: {
         home: window.location.origin + window.location.pathname,
         cart: "?p=cart",
+        signup: "?p=signup",
+        profile: "?p=profile",
+        login: "?p=login",
+        logout: "?p=logout",
     },
-    routeRendered: false,
     mutations: {
         addToCart(product) {
             if (App.state.cart.find(p => p.id === product.id)) {
@@ -82,8 +99,41 @@ App.state = {
         addUser(user) {
             if (App.state.users.find(u => u.name === user.name)) {
                 console.log("User already exists");
+                return false;
             }
             App.state.users.push(user);
+            return true;
         },
-    }
+        getUsers() {
+            return App.state.users;
+        },
+        loginUser(user) {
+            const u = App.state.users.find(u => u.name === user.name && u.password === user.password);
+            if (u) {
+                App.state.loggedInUser = u;
+                App.state.loggedIn = true;
+                return true;
+            }
+            return false;
+        },
+        updateBalance(amount) {
+            App.state.loggedInUser.balance += amount;
+            return true;
+        },
+        getLoggedInUser() {
+            return App.state.loggedInUser;
+        },
+        getUserName() {
+            return App.state.loggedInUser.name;
+        },
+        getUserBalance() {
+            return App.state.loggedInUser.balance;
+        },
+        isLoggedIn() {
+            return App.state.loggedIn;
+        }
+
+    },
+    routeRendered: false,
+    loggedIn: false,
 }

@@ -24,13 +24,21 @@ App.controllers = {
         header.cartIcon.style.height = "36px";
         header.cartIcon.style.cursor = "pointer";
         header.cartIcon.onclick = () => {
-            console.log("cart clicked");
-            this.go("cart");
+            if (App.state.mutations.isLoggedIn()) {
+                console.log("rendering cart");
+                this.go("cart");
+            } else {
+                window.alert("You must be logged in to view your cart");
+            }
         }
 
         header.cartCount.innerText = App.state.mutations.getCartCount();
         // header.cartCount.style.border = "1px solid #e5e5e5";
         header.cartCount.style.color = "white";
+        header.profileIcon.style.marginLeft = "2rem";
+        header.profileIcon.style.width = "36px";
+        header.profileIcon.style.cursor = "pointer";
+        this.updateProfileIcon();
 
         // header.cartContainer.style.border = "1px solid #e5e5e5";
         header.cartContainer.style.display = "flex";
@@ -40,6 +48,7 @@ App.controllers = {
 
         header.cartContainer.appendChild(header.cartIcon);
         header.cartContainer.appendChild(header.cartCount);
+        header.cartContainer.appendChild(header.profileIcon);
 
 
 
@@ -124,12 +133,16 @@ App.controllers = {
                 "Add to cart",
                 () => {
                     // console.log("card clicked");
-                    const userConfirmation = confirm("Do you want to add this product to your cart?");
-                    if (userConfirmation) {
-                        window.alert(App.state.mutations.addToCart(product));
-                        //updates cart to local storage
-                        this.saveLocalStorage();
-                        this.updateCartCount();
+                    if (App.state.mutations.isLoggedIn()) {
+                        const userConfirmation = confirm("Do you want to add this product to your cart?");
+                        if (userConfirmation) {
+                            window.alert(App.state.mutations.addToCart(product));
+                            //updates cart to local storage
+                            this.saveLocalStorage();
+                            this.updateCartCount();
+                        }
+                    } else {
+                        window.alert("You must be logged in to add items to your cart");
                     }
                 }
             );
@@ -171,6 +184,94 @@ App.controllers = {
         // header.cartCount.style.border = "1px solid red";
 
         header.cartCount.innerText = App.state.mutations.getCartCount();
+
+    },
+    updateProfileIcon() {
+        const header = App.elements.header;
+        if (App.state.mutations.isLoggedIn()) {
+            header.profileIcon.src = "./assets/profile-logged.svg";
+            header.profileIcon.onclick = () => {
+                console.log("profile login clicked");
+                this.go("profile");
+            }
+        } else {
+            header.profileIcon.src = "./assets/profile-signin.svg";
+            header.profileIcon.onclick = () => {
+                console.log("profile login clicked");
+                this.go("login");
+            }
+        }
+    },
+    updateBalance() {
+        const balance = App.elements.body.profile.currentBalance;
+        balance.innerText = `Your current balance is: $${App.state.mutations.getUserBalance()}`;
+        balance.style.padding = "1rem";
+        balance.style.margin = "1rem";
+    },
+    createProfile() {
+        const body = App.elements.body;
+        const profile = body.profile;
+        const user = App.state.mutations.getLoggedInUser();
+
+        profile.container.innerHTML = "";
+        profile.currentBalance.innerHTML = "";
+        profile.addBalance.innerHTML = "";
+
+        //User name info
+        profile.title.innerText = `Hello,  ${user.name}!`;
+        profile.title.style.padding = "230px 0 0 0";
+
+        //Current balance info
+        this.updateBalance();
+
+        //Adding balance
+        const add = document.createElement("p");
+        add.innerText = "Add balance: ";
+        profile.addBalance.appendChild(add);
+        const oneDollar = this.createBtn("$1", "primary", () => {
+            App.state.mutations.updateBalance(1);
+            this.updateBalance();
+        });
+        const fiveDollar = this.createBtn("$5", "primary", () => {
+            App.state.mutations.updateBalance(5);
+            this.updateBalance();
+        });
+        const tenDollar = this.createBtn("$10", "primary", () => {
+            App.state.mutations.updateBalance(10);
+            this.updateBalance();
+        });
+        profile.addBalance.appendChild(add);
+        profile.addBalance.appendChild(oneDollar);
+        profile.addBalance.appendChild(fiveDollar);
+        profile.addBalance.appendChild(tenDollar);
+
+        profile.addBalance.style.display = "flex";
+        // profile.addBalance.style.padding = "1rem";
+        profile.addBalance.style.margin = "1rem";
+        profile.addBalance.style.justifyContent = "center";
+        profile.addBalance.style.alignItems = "center";
+        // profile.addBalance.style.justifyContent = "space-between";
+
+        //Logout button
+        profile.logoutBtn = this.createBtn(
+            "Logout",
+            "secondary",
+            () => {
+                this.go("logout");
+            });
+        profile.logoutBtn.style.margin = "auto";
+        profile.logoutBtn.style.padding = "1rem";
+
+
+        //container styling and appends
+        profile.container.style.textAlign = "center";
+
+        profile.container.appendChild(profile.title);
+        profile.container.appendChild(profile.currentBalance);
+        profile.container.appendChild(profile.addBalance);
+        profile.container.appendChild(profile.logoutBtn);
+
+        this.updateBody(profile.container);
 
     },
     createCheckout() {
@@ -233,7 +334,7 @@ App.controllers = {
                 window.alert("Your purchase has been confirmed");
                 App.state.mutations.clearCart();
                 this.updateCartCount();
-                this.dumpLocalStorage();
+                this.dumpLocalStorageCart();
                 this.createMain();
             } else {
                 window.alert("Your purchase has been cancelled");
@@ -274,6 +375,107 @@ App.controllers = {
 
         this.createFooter();
     },
+    createLoginSignUp(loginScreen) {
+        const body = App.elements.body;
+        const login = App.elements.body.login;
+
+        login.container.innerHTML = "";
+        login.loginForm.innerHTML = "";
+
+        if (loginScreen) {
+            login.title.innerHTML = "Login";
+        } else {
+            login.title.innerHTML = "Sign up";
+        }
+        login.title.style.fontSize = "24px";
+        login.title.style.padding = "230px 0 0 0";
+
+        const usernameField = this.createInput("text", "Username", true);
+        const passwordField = this.createInput("password", "Password", true);
+
+        login.loginForm.style.display = "flex";
+        login.loginForm.style.flexDirection = "column";
+        login.loginForm.style.margin = "1rem";
+        login.loginForm.style.alignItems = "center";
+
+        const loginBtn = this.createBtn("Login", "primary", () => {
+            //TODO: login logic
+            const user = {
+                "name": usernameField.value,
+                "password": passwordField.value
+            }
+            if (App.state.mutations.loginUser(user)) {
+                this.updateProfileIcon();
+                this.createMain();
+                console.log("User logged in:" + user.name);
+            } else {
+                window.alert("Invalid username or password");
+            }
+        });
+        loginBtn.style.margin = "1rem";
+        loginBtn.style.cursor = "pointer";
+
+        const signUpBtn = this.createBtn("Sign up", "primary", () => {
+            //TODO sign up logic
+            const user = {
+                "name": usernameField.value,
+                "password": passwordField.value,
+                "balance": 0
+            };
+
+
+            if (App.state.mutations.addUser(user)) {
+                window.alert("User created successfully");
+                this.go("login");
+                // console.log(App.state.mutations.getUsers());
+            } else {
+                window.alert("Username already exists");
+            }
+
+
+        });
+        signUpBtn.style.margin = "1rem";
+        signUpBtn.style.cursor = "pointer";
+
+
+        const signup = document.createElement("p");
+        signup.innerText = "Don't have an account? Sign up";
+        signup.style.fontSize = "14px";
+        signup.style.cursor = "pointer";
+        signup.onclick = () => {
+            this.go("signup");
+        }
+
+
+        login.loginForm.appendChild(usernameField);
+        login.loginForm.appendChild(passwordField);
+        if (loginScreen) {
+            login.loginForm.appendChild(loginBtn);
+            login.loginForm.appendChild(signup);
+        } else {
+            login.loginForm.appendChild(signUpBtn);
+        }
+
+
+        login.container.style.textAlign = "center";
+
+
+        login.container.appendChild(login.title);
+        login.container.appendChild(login.loginForm);
+
+        this.updateBody(login.container);
+    },
+    createInput(type, placeholder, required) {
+        const el = document.createElement("input");
+        el.type = type;
+        el.placeholder = placeholder;
+        el.required = required;
+        el.style.borderRadius = "5px";
+        el.style.border = "1px solid #E5E5E5";
+        el.style.padding = "10px";
+        el.style.margin = "0.5rem";
+        return el;
+    },
     getPage() {
         let searchParams = new URLSearchParams(window.location.search);
         const page = searchParams.get("p");
@@ -292,7 +494,16 @@ App.controllers = {
             } else if (!page) {
                 // console.log("rendering main");
                 this.createMain();
-            } else {
+            } else if (page == "signup") {
+                this.createLoginSignUp(false);
+            } else if (page == "login") {
+                this.createLoginSignUp(true);
+            } else if (page == "profile") {
+                this.createProfile();
+            } else if (page == "logout") {
+                this.logout();
+            }
+            else {
                 //error page
                 this.createErrorPage();
             }
@@ -544,15 +755,17 @@ App.controllers = {
     saveLocalStorage() {
         const data = JSON.stringify(App.state.cart);
         // console.log(data);
-        localStorage.setItem(App.state.keys.cart, data);
+        // console.log("-------------: ", App.state.keys.cart);
+        localStorage.setItem(App.state.keys[0], data);
     },
     loadLocalStorage() {
-        const data = localStorage.getItem(App.state.keys.cart);
+        const data = localStorage.getItem(App.state.keys[0]);
         if (data) {
             App.state.mutations.setCart(JSON.parse(data));
         }
     },
-    dumpLocalStorage() {
-        localStorage.removeItem(App.state.keys.cart);
+    dumpLocalStorageCart() {
+        //removing items from local storage
+        localStorage.removeItem(App.state.keys[0]);
     }
 }
