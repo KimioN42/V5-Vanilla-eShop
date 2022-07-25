@@ -38,6 +38,7 @@ App.elements = {
         checkout: {
             container: document.createElement("div"),
             title: document.createElement("h1"),
+            balance: document.createElement("h2"),
             confirmBtnContainer: document.createElement("div"),
             confirmBtn: document.createElement("button"),
             itemsContainer: document.createElement("div"),

@@ -16,7 +16,7 @@ App.controllers = {
         header.logo.style.cursor = "pointer";
         header.logo.onclick = () => {
             console.log("home clicked");
-            this.go("home")
+            this.go("home");
         }
 
         header.cartIcon.src = "./assets/cart.png";
@@ -138,7 +138,7 @@ App.controllers = {
                         if (userConfirmation) {
                             window.alert(App.state.mutations.addToCart(product));
                             //updates cart to local storage
-                            this.saveLocalStorage();
+                            this.saveCartToLocalStorage();
                             this.updateCartCount();
                         }
                     } else {
@@ -167,8 +167,9 @@ App.controllers = {
                     if (userConfirmation) {
                         window.alert(App.state.mutations.removeFromCart(product));
                         this.updateCartCount();
+                        localStorage.setItem(App.state.keys[0], JSON.stringify(App.state.cart));
                         //updates the cart in local storage
-                        this.saveLocalStorage();
+                        this.saveCartToLocalStorage();
                         this.createCheckout();
                     }
                 }
@@ -217,69 +218,92 @@ App.controllers = {
         profile.currentBalance.innerHTML = "";
         profile.addBalance.innerHTML = "";
 
-        //User name info
-        profile.title.innerText = `Hello,  ${user.name}!`;
-        profile.title.style.padding = "230px 0 0 0";
+        if (App.state.mutations.isLoggedIn()) {
+            //User name info
+            profile.title.innerText = `Hello,  ${user.name}!`;
+            profile.title.style.padding = "230px 0 0 0";
 
-        //Current balance info
-        this.updateBalance();
-
-        //Adding balance
-        const add = document.createElement("p");
-        add.innerText = "Add balance: ";
-        profile.addBalance.appendChild(add);
-        const oneDollar = this.createBtn("$1", "primary", () => {
-            App.state.mutations.updateBalance(1);
+            //Current balance info
             this.updateBalance();
-        });
-        const fiveDollar = this.createBtn("$5", "primary", () => {
-            App.state.mutations.updateBalance(5);
-            this.updateBalance();
-        });
-        const tenDollar = this.createBtn("$10", "primary", () => {
-            App.state.mutations.updateBalance(10);
-            this.updateBalance();
-        });
-        profile.addBalance.appendChild(add);
-        profile.addBalance.appendChild(oneDollar);
-        profile.addBalance.appendChild(fiveDollar);
-        profile.addBalance.appendChild(tenDollar);
 
-        profile.addBalance.style.display = "flex";
-        // profile.addBalance.style.padding = "1rem";
-        profile.addBalance.style.margin = "1rem";
-        profile.addBalance.style.justifyContent = "center";
-        profile.addBalance.style.alignItems = "center";
-        // profile.addBalance.style.justifyContent = "space-between";
-
-        //Logout button
-        profile.logoutBtn = this.createBtn(
-            "Logout",
-            "secondary",
-            () => {
-                this.go("logout");
+            //Adding balance
+            const add = document.createElement("p");
+            add.innerText = "Add balance: ";
+            profile.addBalance.appendChild(add);
+            const oneDollar = this.createBtn("$1", "primary", () => {
+                App.state.mutations.updateBalance(1);
+                this.updateBalance();
             });
-        profile.logoutBtn.style.margin = "auto";
-        profile.logoutBtn.style.padding = "1rem";
+            const fiveDollar = this.createBtn("$5", "primary", () => {
+                App.state.mutations.updateBalance(5);
+                this.updateBalance();
+            });
+            const tenDollar = this.createBtn("$10", "primary", () => {
+                App.state.mutations.updateBalance(10);
+                this.updateBalance();
+            });
+            profile.addBalance.appendChild(add);
+            profile.addBalance.appendChild(oneDollar);
+            profile.addBalance.appendChild(fiveDollar);
+            profile.addBalance.appendChild(tenDollar);
+
+            profile.addBalance.style.display = "flex";
+            // profile.addBalance.style.padding = "1rem";
+            profile.addBalance.style.margin = "1rem";
+            profile.addBalance.style.justifyContent = "center";
+            profile.addBalance.style.alignItems = "center";
+            // profile.addBalance.style.justifyContent = "space-between";
+
+            //Logout button
+            profile.logoutBtn = this.createBtn(
+                "Logout",
+                "secondary",
+                () => {
+                    localStorage.removeItem(App.state.keys[1]);
+                    localStorage.removeItem(App.state.keys[2]);
+                    this.go("logout");
+                });
+            profile.logoutBtn.style.margin = "auto";
+            profile.logoutBtn.style.padding = "1rem";
+            profile.logoutBtn.style.cursor = "pointer";
+
+            //container styling and appends
+            profile.container.style.textAlign = "center";
 
 
-        //container styling and appends
-        profile.container.style.textAlign = "center";
+        } else {
+            profile.title.innerText = "You are not logged in";
+            profile.title.style.padding = "230px 0 0 0";
+            profile.container.style.textAlign = "center";
+            profile.logoutBtn = this.createBtn("Login", "secondary", () => {
+                this.go("login");
+            });
+            profile.logoutBtn.style.margin = "auto";
+        }
 
         profile.container.appendChild(profile.title);
         profile.container.appendChild(profile.currentBalance);
         profile.container.appendChild(profile.addBalance);
         profile.container.appendChild(profile.logoutBtn);
-
         this.updateBody(profile.container);
-
+    },
+    logout() {
+        if (App.state.mutations.logoutUser()) {
+            localStorage.removeItem(App.state.keys[0]);
+            localStorage.removeItem(App.state.keys[1]);
+            localStorage.removeItem(App.state.keys[2]);
+            this.updateProfileIcon();
+            this.go("login");
+            App.elements.body.container.innerHTML = "";
+            this.createLoginSignUp(true);
+        } else {
+            window.alert("Something went wrong when logging out");
+        }
     },
     createCheckout() {
         const els = App.elements;
-        const { container, title, items, confirmBtn, confirmBtnContainer, itemsContainer } =
+        const { container, title, balance, items, confirmBtn, confirmBtnContainer, itemsContainer } =
             els.body.checkout;
-
-
 
         container.style.backgroundColor = "#E5E5E5";
         container.style.height = "100%";
@@ -296,6 +320,11 @@ App.controllers = {
         title.style.lineHeight = "29px";
         title.style.textAlign = "center";
 
+        balance.innerText = `Your current balance is: $${App.state.mutations.getUserBalance()}`;
+        balance.style.padding = "1rem";
+        balance.style.margin = "1rem";
+        balance.style.textAlign = "center";
+
 
         //TODO: add items here
         itemsContainer.style.display = "flex";
@@ -303,9 +332,6 @@ App.controllers = {
         itemsContainer.style.justifyContent = "center";
         itemsContainer.style.marginBottom = "5rem";
         this.createCartElements(itemsContainer);
-
-
-
 
         confirmBtn.innerText = "Confirm purchase";
         confirmBtn.classList.add("btn");
@@ -318,6 +344,7 @@ App.controllers = {
         container.style.marginBottom = "10rem";
 
         container.appendChild(title);
+        container.appendChild(balance);
         container.appendChild(itemsContainer);
         container.appendChild(confirmBtnContainer);
 
@@ -331,11 +358,16 @@ App.controllers = {
         if (App.state.mutations.getCartCount() > 0) {
             const userRes = confirm("Do you want to confirm your purchase?");
             if (userRes) {
-                window.alert("Your purchase has been confirmed");
-                App.state.mutations.clearCart();
-                this.updateCartCount();
-                this.dumpLocalStorageCart();
-                this.createMain();
+                if (App.state.mutations.getUserBalance() >= App.state.mutations.getCartTotal()) {
+                    window.alert("Your purchase has been confirmed");
+                    App.state.mutations.updateBalance(-App.state.mutations.getCartTotal());
+                    App.state.mutations.clearCart();
+                    this.updateCartCount();
+                    localStorage.removeItem(App.state.keys[0]);
+                    this.go("home");
+                } else {
+                    window.alert("You don't have enough balance to complete this purchase");
+                }
             } else {
                 window.alert("Your purchase has been cancelled");
             }
@@ -407,7 +439,12 @@ App.controllers = {
             if (App.state.mutations.loginUser(user)) {
                 this.updateProfileIcon();
                 this.createMain();
+                localStorage.setItem(App.state.keys[1], JSON.stringify(App.state.loggedInUser));
+                localStorage.setItem(App.state.keys[2], App.state.mutations.isLoggedIn());
+                localStorage.setItem(App.state.keys[3], JSON.stringify(App.state.mutations.getUsers()));
+                console.log("status in local storage: " + localStorage.getItem(App.state.keys[2]));
                 console.log("User logged in:" + user.name);
+                this.go("home");
             } else {
                 window.alert("Invalid username or password");
             }
@@ -426,6 +463,7 @@ App.controllers = {
 
             if (App.state.mutations.addUser(user)) {
                 window.alert("User created successfully");
+                localStorage.setItem(App.state.keys[3], JSON.stringify(App.state.users));
                 this.go("login");
                 // console.log(App.state.mutations.getUsers());
             } else {
@@ -488,12 +526,12 @@ App.controllers = {
             }
             const page = this.getPage();
             // console.log("page:", page);
-            if (page == "cart") {
-                // console.log("rendering checkout");
-                this.createCheckout();
-            } else if (!page) {
+            if (!page) {
                 // console.log("rendering main");
                 this.createMain();
+            } else if (page == "cart") {
+                // console.log("rendering checkout");
+                this.createCheckout();
             } else if (page == "signup") {
                 this.createLoginSignUp(false);
             } else if (page == "login") {
@@ -502,8 +540,7 @@ App.controllers = {
                 this.createProfile();
             } else if (page == "logout") {
                 this.logout();
-            }
-            else {
+            } else {
                 //error page
                 this.createErrorPage();
             }
@@ -511,13 +548,14 @@ App.controllers = {
         }, 100);
 
     },
-    go(p, url) {
+    go(p) {
         App.state.routeRendered = false;
-        if (p === "cart") {
-            history.pushState({ p }, "", App.state.routes[p]);
-        } else {
-            history.pushState({ p }, "", App.state.routes[p]);
-        }
+        history.pushState({ p }, "", App.state.routes[p]);
+        // if (p === "cart") {
+        //     history.pushState({ p }, "", App.state.routes[p]);
+        // } else {
+        //     history.pushState({ p }, "", App.state.routes[p]);
+        // }
 
     },
     createBtn(content, type = "primary", onClick) {
@@ -752,20 +790,30 @@ App.controllers = {
             currency: 'USD', minimumFractionDigits: 2
         }).format(value);
     },
-    saveLocalStorage() {
-        const data = JSON.stringify(App.state.cart);
-        // console.log(data);
-        // console.log("-------------: ", App.state.keys.cart);
-        localStorage.setItem(App.state.keys[0], data);
+    saveCartToLocalStorage() {
+        const cartData = JSON.stringify(App.state.cart);
+        //cart data
+        localStorage.setItem(App.state.keys[0], cartData);
     },
     loadLocalStorage() {
-        const data = localStorage.getItem(App.state.keys[0]);
-        if (data) {
-            App.state.mutations.setCart(JSON.parse(data));
+        //gets cart data from local storage and sets it to the cart state
+        const cartData = localStorage.getItem(App.state.keys[0]);
+        if (cartData) {
+            App.state.mutations.setCart(JSON.parse(cartData));
+        }
+        //gets user data from local storage and sets it to the logged in user state
+        const userData = localStorage.getItem(App.state.keys[1]);
+        if (userData) {
+            App.state.mutations.setLoggedInUser(JSON.parse(userData));
+        }
+        //gets logged in state from local storage and sets it to the logged in state
+        const loginData = localStorage.getItem(App.state.keys[2]);
+        // console.log("login data retrieved is: ", loginData);
+        App.state.mutations.setLoggedIn(loginData === "true");
+        //gets users data from local storage and sets it to the users state
+        const usersData = localStorage.getItem(App.state.keys[3]);
+        if (usersData) {
+            App.state.mutations.setUsers(JSON.parse(usersData));
         }
     },
-    dumpLocalStorageCart() {
-        //removing items from local storage
-        localStorage.removeItem(App.state.keys[0]);
-    }
 }

@@ -1,21 +1,22 @@
 App.state = {
     keys: [
         cart = "Ingate-V5-cart",
-        profile = "Ingate-V5-profile",
+        user = "Ingate-V5-user",
         loggedIn = "Ingate-V5-loggedIn",
+        userDatabase = "Ingate-V5-userDatabase",
     ],
     users: [
         // sample data:
-        {
-            name: "Kimio",
-            password: "123",
-            balance: 0
-        },
+        // {
+        //     name: "Kimio",
+        //     password: "123",
+        //     balance: 0
+        // },
     ],
     loggedInUser: {
-        name: "Kimio",
-        password: "123",
-        balance: 0,
+        // name: "Kimio",
+        // password: "123",
+        // balance: 10,
     },
     products: [
         {
@@ -56,7 +57,6 @@ App.state = {
             ]
         }
     ],
-    //products array
     cart: [],
     routes: {
         home: window.location.origin + window.location.pathname,
@@ -90,7 +90,7 @@ App.state = {
             App.state.cart.forEach(p => {
                 sum += p.price;
             });
-            console.log("Total ammount in cart is " + sum);
+            // console.log("Total ammount in cart is " + sum);
             return sum;
         },
         setCart(cart) {
@@ -107,6 +107,9 @@ App.state = {
         getUsers() {
             return App.state.users;
         },
+        setUsers(users) {
+            App.state.users = users;
+        },
         loginUser(user) {
             const u = App.state.users.find(u => u.name === user.name && u.password === user.password);
             if (u) {
@@ -118,10 +121,21 @@ App.state = {
         },
         updateBalance(amount) {
             App.state.loggedInUser.balance += amount;
+            for (let i = 0; i < App.state.users.length; i++) {
+                if (App.state.users[i].name === App.state.loggedInUser.name) {
+                    App.state.users[i].balance = App.state.loggedInUser.balance;
+                    break;
+                }
+            }
+            localStorage.setItem(App.state.keys[1], JSON.stringify(App.state.loggedInUser));
+            localStorage.setItem(App.state.keys[3], JSON.stringify(App.state.users));
             return true;
         },
         getLoggedInUser() {
             return App.state.loggedInUser;
+        },
+        setLoggedInUser(user) {
+            App.state.loggedInUser = user;
         },
         getUserName() {
             return App.state.loggedInUser.name;
@@ -131,8 +145,16 @@ App.state = {
         },
         isLoggedIn() {
             return App.state.loggedIn;
+        },
+        setLoggedIn(loggedIn) {
+            App.state.loggedIn = loggedIn;
+        },
+        logoutUser() {
+            console.log("Logging out");
+            App.state.loggedInUser = {};
+            App.state.loggedIn = false;
+            return true;
         }
-
     },
     routeRendered: false,
     loggedIn: false,
