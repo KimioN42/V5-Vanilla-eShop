@@ -1,4 +1,8 @@
 App.state = {
+    keys: [{
+        cart: "Ingate-V5-cart",
+    }],
+    users: [],
     products: [
         {
             id: 1,
@@ -39,16 +43,7 @@ App.state = {
         }
     ],
     //products array
-    cart: [
-        {
-            id: 1,
-            name: "Croissant",
-            price: 2,
-            desc: "Amazing butter croissant",
-            images: ["./assets/product1.png",
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/2018_01_Croissant_IMG_0685.JPG/1024px-2018_01_Croissant_IMG_0685.JPG",
-                "https://www.theflavorbender.com/wp-content/uploads/2020/05/French-Croissants-SM-2363.jpg",]
-        },],
+    cart: [],
     routes: {
         home: window.location.origin + window.location.pathname,
         cart: "?p=cart",
@@ -78,9 +73,17 @@ App.state = {
             App.state.cart.forEach(p => {
                 sum += p.price;
             });
-            console.log("total is " + sum);
+            console.log("Total ammount in cart is " + sum);
             return sum;
-        }
-    },
-
+        },
+        setCart(cart) {
+            App.state.cart = cart;
+        },
+        addUser(user) {
+            if (App.state.users.find(u => u.name === user.name)) {
+                console.log("User already exists");
+            }
+            App.state.users.push(user);
+        },
+    }
 }

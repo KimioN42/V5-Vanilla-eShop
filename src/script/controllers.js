@@ -126,8 +126,9 @@ App.controllers = {
                     // console.log("card clicked");
                     const userConfirmation = confirm("Do you want to add this product to your cart?");
                     if (userConfirmation) {
-                        const cartStatus = App.state.mutations.addToCart(product);
-                        window.alert(cartStatus);
+                        window.alert(App.state.mutations.addToCart(product));
+                        //updates cart to local storage
+                        this.saveLocalStorage();
                         this.updateCartCount();
                     }
                 }
@@ -151,9 +152,10 @@ App.controllers = {
                     // console.log("card clicked");
                     const userConfirmation = confirm("Do you want to remove this product to your cart?");
                     if (userConfirmation) {
-                        const cartStatus = App.state.mutations.removeFromCart(product);
-                        window.alert(cartStatus);
+                        window.alert(App.state.mutations.removeFromCart(product));
                         this.updateCartCount();
+                        //updates the cart in local storage
+                        this.saveLocalStorage();
                         this.createCheckout();
                     }
                 }
@@ -231,6 +233,7 @@ App.controllers = {
                 window.alert("Your purchase has been confirmed");
                 App.state.mutations.clearCart();
                 this.updateCartCount();
+                this.dumpLocalStorage();
                 this.createMain();
             } else {
                 window.alert("Your purchase has been cancelled");
@@ -538,4 +541,18 @@ App.controllers = {
             currency: 'USD', minimumFractionDigits: 2
         }).format(value);
     },
+    saveLocalStorage() {
+        const data = JSON.stringify(App.state.cart);
+        // console.log(data);
+        localStorage.setItem(App.state.keys.cart, data);
+    },
+    loadLocalStorage() {
+        const data = localStorage.getItem(App.state.keys.cart);
+        if (data) {
+            App.state.mutations.setCart(JSON.parse(data));
+        }
+    },
+    dumpLocalStorage() {
+        localStorage.removeItem(App.state.keys.cart);
+    }
 }
