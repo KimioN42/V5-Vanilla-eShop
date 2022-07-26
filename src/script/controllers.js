@@ -149,8 +149,6 @@ App.controllers = {
             card.style.margin = "1rem";
             container.appendChild(card);
         });
-
-
     },
     createCartElements(container) {
         container.innerHTML = "";
@@ -167,7 +165,6 @@ App.controllers = {
                     if (userConfirmation) {
                         window.alert(App.state.mutations.removeFromCart(product));
                         this.updateCartCount();
-                        localStorage.setItem(App.state.keys[0], JSON.stringify(App.state.cart));
                         //updates the cart in local storage
                         this.saveCartToLocalStorage();
                         this.createCheckout();
@@ -289,9 +286,9 @@ App.controllers = {
     },
     logout() {
         if (App.state.mutations.logoutUser()) {
-            localStorage.removeItem(App.state.keys[0]);
-            localStorage.removeItem(App.state.keys[1]);
-            localStorage.removeItem(App.state.keys[2]);
+            localStorage.removeItem(App.state.keys.loggedIn);
+            localStorage.removeItem(App.state.keys.user);
+            localStorage.removeItem(App.state.keys.cart);
             this.updateProfileIcon();
             this.go("login");
             App.elements.body.container.innerHTML = "";
@@ -439,9 +436,9 @@ App.controllers = {
             if (App.state.mutations.loginUser(user)) {
                 this.updateProfileIcon();
                 this.createMain();
-                localStorage.setItem(App.state.keys[1], JSON.stringify(App.state.loggedInUser));
-                localStorage.setItem(App.state.keys[2], App.state.mutations.isLoggedIn());
-                localStorage.setItem(App.state.keys[3], JSON.stringify(App.state.mutations.getUsers()));
+                localStorage.setItem(App.state.keys.user, JSON.stringify(App.state.loggedInUser));
+                localStorage.setItem(App.state.keys.loggedIn, App.state.mutations.isLoggedIn());
+                localStorage.setItem(App.state.keys.userDatabase, JSON.stringify(App.state.users));
                 console.log("status in local storage: " + localStorage.getItem(App.state.keys[2]));
                 console.log("User logged in:" + user.name);
                 this.go("home");
@@ -460,17 +457,14 @@ App.controllers = {
                 "balance": 0
             };
 
-
             if (App.state.mutations.addUser(user)) {
                 window.alert("User created successfully");
-                localStorage.setItem(App.state.keys[3], JSON.stringify(App.state.users));
+                localStorage.setItem(App.state.keys.userDatabase, JSON.stringify(App.state.users));
                 this.go("login");
                 // console.log(App.state.mutations.getUsers());
             } else {
                 window.alert("Username already exists");
             }
-
-
         });
         signUpBtn.style.margin = "1rem";
         signUpBtn.style.cursor = "pointer";
@@ -793,25 +787,25 @@ App.controllers = {
     saveCartToLocalStorage() {
         const cartData = JSON.stringify(App.state.cart);
         //cart data
-        localStorage.setItem(App.state.keys[0], cartData);
+        localStorage.setItem(App.state.keys.cart, cartData);
     },
     loadLocalStorage() {
         //gets cart data from local storage and sets it to the cart state
-        const cartData = localStorage.getItem(App.state.keys[0]);
+        const cartData = localStorage.getItem(App.state.keys.cart);
         if (cartData) {
             App.state.mutations.setCart(JSON.parse(cartData));
         }
         //gets user data from local storage and sets it to the logged in user state
-        const userData = localStorage.getItem(App.state.keys[1]);
+        const userData = localStorage.getItem(App.state.keys.user);
         if (userData) {
             App.state.mutations.setLoggedInUser(JSON.parse(userData));
         }
         //gets logged in state from local storage and sets it to the logged in state
-        const loginData = localStorage.getItem(App.state.keys[2]);
+        const loginData = localStorage.getItem(App.state.keys.loggedIn);
         // console.log("login data retrieved is: ", loginData);
         App.state.mutations.setLoggedIn(loginData === "true");
         //gets users data from local storage and sets it to the users state
-        const usersData = localStorage.getItem(App.state.keys[3]);
+        const usersData = localStorage.getItem(App.state.keys.userDatabase);
         if (usersData) {
             App.state.mutations.setUsers(JSON.parse(usersData));
         }

@@ -1,10 +1,10 @@
 App.state = {
-    keys: [
-        cart = "Ingate-V5-cart",
-        user = "Ingate-V5-user",
-        loggedIn = "Ingate-V5-loggedIn",
-        userDatabase = "Ingate-V5-userDatabase",
-    ],
+    keys: {
+        cart: "Ingate-V5-cart",
+        user: "Ingate-V5-user",
+        loggedIn: "Ingate-V5-loggedIn",
+        userDatabase: "Ingate-V5-userDatabase",
+    },
     users: [
         // sample data:
         // {
@@ -104,9 +104,6 @@ App.state = {
             App.state.users.push(user);
             return true;
         },
-        getUsers() {
-            return App.state.users;
-        },
         setUsers(users) {
             App.state.users = users;
         },
@@ -127,8 +124,8 @@ App.state = {
                     break;
                 }
             }
-            localStorage.setItem(App.state.keys[1], JSON.stringify(App.state.loggedInUser));
-            localStorage.setItem(App.state.keys[3], JSON.stringify(App.state.users));
+            localStorage.setItem(App.state.keys.user, JSON.stringify(App.state.loggedInUser));
+            localStorage.setItem(App.state.keys.userDatabase, JSON.stringify(App.state.users));
             return true;
         },
         getLoggedInUser() {
