@@ -1,4 +1,23 @@
 App.state = {
+    keys: [
+        cart = "Ingate-V5-cart",
+        user = "Ingate-V5-user",
+        loggedIn = "Ingate-V5-loggedIn",
+        userDatabase = "Ingate-V5-userDatabase",
+    ],
+    users: [
+        // sample data:
+        // {
+        //     name: "Kimio",
+        //     password: "123",
+        //     balance: 0
+        // },
+    ],
+    loggedInUser: {
+        // name: "Kimio",
+        // password: "123",
+        // balance: 10,
+    },
     products: [
         {
             id: 1,
@@ -38,22 +57,15 @@ App.state = {
             ]
         }
     ],
-    //products array
-    cart: [
-        {
-            id: 1,
-            name: "Croissant",
-            price: 2,
-            desc: "Amazing butter croissant",
-            images: ["./assets/product1.png",
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/2018_01_Croissant_IMG_0685.JPG/1024px-2018_01_Croissant_IMG_0685.JPG",
-                "https://www.theflavorbender.com/wp-content/uploads/2020/05/French-Croissants-SM-2363.jpg",]
-        },],
+    cart: [],
     routes: {
         home: window.location.origin + window.location.pathname,
         cart: "?p=cart",
+        signup: "?p=signup",
+        profile: "?p=profile",
+        login: "?p=login",
+        logout: "?p=logout",
     },
-    routeRendered: false,
     mutations: {
         addToCart(product) {
             if (App.state.cart.find(p => p.id === product.id)) {
@@ -78,9 +90,72 @@ App.state = {
             App.state.cart.forEach(p => {
                 sum += p.price;
             });
-            console.log("total is " + sum);
+            // console.log("Total ammount in cart is " + sum);
             return sum;
+        },
+        setCart(cart) {
+            App.state.cart = cart;
+        },
+        addUser(user) {
+            if (App.state.users.find(u => u.name === user.name)) {
+                console.log("User already exists");
+                return false;
+            }
+            App.state.users.push(user);
+            return true;
+        },
+        getUsers() {
+            return App.state.users;
+        },
+        setUsers(users) {
+            App.state.users = users;
+        },
+        loginUser(user) {
+            const u = App.state.users.find(u => u.name === user.name && u.password === user.password);
+            if (u) {
+                App.state.loggedInUser = u;
+                App.state.loggedIn = true;
+                return true;
+            }
+            return false;
+        },
+        updateBalance(amount) {
+            App.state.loggedInUser.balance += amount;
+            for (let i = 0; i < App.state.users.length; i++) {
+                if (App.state.users[i].name === App.state.loggedInUser.name) {
+                    App.state.users[i].balance = App.state.loggedInUser.balance;
+                    break;
+                }
+            }
+            localStorage.setItem(App.state.keys[1], JSON.stringify(App.state.loggedInUser));
+            localStorage.setItem(App.state.keys[3], JSON.stringify(App.state.users));
+            return true;
+        },
+        getLoggedInUser() {
+            return App.state.loggedInUser;
+        },
+        setLoggedInUser(user) {
+            App.state.loggedInUser = user;
+        },
+        getUserName() {
+            return App.state.loggedInUser.name;
+        },
+        getUserBalance() {
+            return App.state.loggedInUser.balance;
+        },
+        isLoggedIn() {
+            return App.state.loggedIn;
+        },
+        setLoggedIn(loggedIn) {
+            App.state.loggedIn = loggedIn;
+        },
+        logoutUser() {
+            console.log("Logging out");
+            App.state.loggedInUser = {};
+            App.state.loggedIn = false;
+            return true;
         }
     },
-
+    routeRendered: false,
+    loggedIn: false,
 }

@@ -6,6 +6,7 @@ App.elements = {
         cartContainer: document.createElement("div"),
         cartIcon: document.createElement("img"),
         cartCount: document.createElement("span"),
+        profileIcon: document.createElement("img"),
     },
     body: {
         container: document.createElement("section"),
@@ -22,9 +23,22 @@ App.elements = {
             itemsContainer: document.createElement("div"),
 
         },
+        login: {
+            container: document.createElement("section"),
+            title: document.createElement("h1"),
+            loginForm: document.createElement("div"),
+        },
+        profile: {
+            container: document.createElement("section"),
+            title: document.createElement("h1"),
+            currentBalance: document.createElement("div"),
+            addBalance: document.createElement("div"),
+            logoutBtn: document.createElement("button"),
+        },
         checkout: {
             container: document.createElement("div"),
             title: document.createElement("h1"),
+            balance: document.createElement("h2"),
             confirmBtnContainer: document.createElement("div"),
             confirmBtn: document.createElement("button"),
             itemsContainer: document.createElement("div"),
