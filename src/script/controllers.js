@@ -667,27 +667,14 @@ App.controllers = {
         return el;
     },
     createModal(children) {
+        //element to be returned
+        const el = document.createElement("div");
+
         //function
         const closeModal = () => {
             console.log("modal closed");
             this.closeModal(el);
         }
-
-        window.onload = function () {
-            timer = document.getElementById("timer");
-            let time = 5;
-            setInterval(() => {
-                time--;
-                timer.innerHTML = time;
-                if (time == 0) {
-                    window.location.href = "https://youtube.com/watch?v=dQw4w9WgXcQ";
-                }
-            }, 1000);
-
-        }
-
-        //element to be returned
-        const el = document.createElement("div");
 
         el.style.display = "flex";
         el.style.justifyContent = "center";
@@ -705,9 +692,6 @@ App.controllers = {
                 closeModal();
             }
         };
-
-
-
         //modal
         const modal = document.createElement("div");
 
@@ -735,6 +719,7 @@ App.controllers = {
 
         //body
         const body = document.createElement("div");
+        body.innerHTML = "";
         body.innerHTML = children;
 
 
@@ -768,6 +753,7 @@ App.controllers = {
     },
     openModal(el) {
         //modalOpen = true;
+        // console.log("opening modal of element: ", el);
         el.style.display = "flex";
     },
     closeModal(el) {
