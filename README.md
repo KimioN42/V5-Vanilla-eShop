@@ -4,7 +4,7 @@ This was purely an experiment in learning JavaScript. In this repository you wil
 
 ## Installation
 
-Since this is a vanilla JS project that makes use of no framework, you can just clone this repo and open the index.html located inside the /src folder. From there, the html should be able to run all the necessary scripts to load the website :)
+Since this is a vanilla JS project that makes use of no framework, you can just clone this repo and open the index.html located inside the /src folder. From there, the html should be able to run all the necessary scripts to load the website :) 
 
 ## Screenshots
 
